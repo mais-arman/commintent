@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comment Box with Avatar</title>
+  <style>
+    .comment-box {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .comment-list {
+      margin-top: 20px;
+    }
+
+    .comment {
+      background-color: #f5f5f5;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .comment img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .comment-text {
+      flex-grow: 1;
+    }
+
+    form textarea {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    form button {
+      padding: 10px 20px;
+      background-color: #50ed8c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    form button.cancel {
+      background-color: #ff5252;
+    }
+
+    form button:hover {
+      background-color: #15d35e;
+    }
+
+    form button.cancel:hover{
+      background-color: #e12e2e;
+    }
+  </style>
+</head>
+<body>
+  <div class="comment-box">
+    <div class="comment-list" id="commentList">
+      <!-- Comments will be dynamically added here -->
+    </div>
+    <form id="commentForm">
+      <textarea id="commentInput" placeholder="Write your comment here"></textarea>
+      <button type="submit">Post Comment</button>
+      <button type="button" class="cancel">Cancel</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const commentForm = document.getElementById('commentForm');
+      const commentList = document.getElementById('commentList');
+      const commentInput = document.getElementById('commentInput');
+      let comments = []; // Array to hold comments
+
+      commentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const commentText = commentInput.value.trim();
+        if (commentText !== '') {
+          const commentItem = document.createElement('div');
+          commentItem.classList.add('comment');
+          const avatar = document.createElement('img');
+          avatar.src = 'm.jpg'; // Replace with your avatar image URL
+          const commentTextElement = document.createElement('div');
+          commentTextElement.textContent = commentText;
+          commentTextElement.classList.add('comment-text');
+          commentItem.appendChild(avatar);
+          commentItem.appendChild(commentTextElement);
+          commentList.appendChild(commentItem);
+          commentInput.value = '';
+
+          // Add comment to the array
+          comments.push({
+            text: commentText,
+            avatarUrl: avatar.src
+          });
+        }
+      });
+
+      // Function to initialize comments from the array
+      function initializeComments() {
+        comments.forEach(function(comment) {
+          const commentItem = document.createElement('div');
+          commentItem.classList.add('comment');
+          const avatar = document.createElement('img');
+          avatar.src = comment.avatarUrl;
+          const commentTextElement = document.createElement('div');
+          commentTextElement.textContent = comment.text;
+          commentTextElement.classList.add('comment-text');
+          commentItem.appendChild(avatar);
+          commentItem.appendChild(commentTextElement);
+          commentList.appendChild(commentItem);
+        });
+      }
+
+      // Initialize comments when the page loads
+      initializeComments();
+
+      // Cancel button event listener
+      const cancelButton = commentForm.querySelector('.cancel');
+      cancelButton.addEventListener('click', function() {
+        if (comments.length > 0) {
+          const lastCommentItem = commentList.lastElementChild;
+          commentList.removeChild(lastCommentItem);
+          comments.pop();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
